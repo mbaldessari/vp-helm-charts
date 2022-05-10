@@ -1,6 +1,6 @@
 apiVersion: v2
 name: vp-hello
-description: A Helm chart for Kubernetes for Validated Pattern testing 
+description: A Helm chart for Kubernetes for Validated Pattern testing
 
 # A chart can be either an 'application' or a 'library' chart.
 #
