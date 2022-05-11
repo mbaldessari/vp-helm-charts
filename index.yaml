@@ -2,6 +2,16 @@ apiVersion: v1
 entries:
   vp-hello:
   - apiVersion: v2
+    appVersion: 1.16.1
+    created: "2022-05-11T09:53:16.497885998Z"
+    description: A Helm chart for Kubernetes for Validated Pattern testing
+    digest: 1fefc59936a847fc84125779b2d2107c0ea90450c7f0b4abb2ef338dab314046
+    name: vp-hello
+    type: application
+    urls:
+    - https://github.com/mbaldessari/vp-helm-charts/releases/download/vp-hello-0.2.0/vp-hello-0.2.0.tgz
+    version: 0.2.0
+  - apiVersion: v2
     appVersion: 1.16.0
     created: "2022-05-10T17:03:13.187482608Z"
     description: A Helm chart for Kubernetes for Validated Pattern testing
@@ -11,4 +21,4 @@ entries:
     urls:
     - https://github.com/mbaldessari/vp-helm-charts/releases/download/vp-hello-0.1.0/vp-hello-0.1.0.tgz
     version: 0.1.0
-generated: "2022-05-10T17:03:13.187487908Z"
+generated: "2022-05-11T09:53:16.497892698Z"
