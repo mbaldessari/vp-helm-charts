@@ -1,5 +1,28 @@
 apiVersion: v1
 entries:
+  acm:
+  - apiVersion: v2
+    created: "2023-04-23T08:43:44.187911631Z"
+    description: A Helm chart to configure Advanced Cluster Manager for OpenShift
+    digest: c7cd4c4abb4eb7262a1f267716930023b0e283e112d986def25f0d8e9a2f0961
+    keywords:
+    - pattern
+    name: acm
+    urls:
+    - https://github.com/mbaldessari/vp-helm-charts/releases/download/acm-0.0.1/acm-0.0.1.tgz
+    version: 0.0.1
+  pattern-clustergroup:
+  - apiVersion: v2
+    created: "2023-04-23T08:43:44.334678908Z"
+    description: A Helm chart to create per-clustergroup ArgoCD applications and any
+      required namespaces or subscriptions
+    digest: 53beb16957cb196a3d12758831b23b2f3c40365ae459d5614194b86b32b96c43
+    keywords:
+    - pattern
+    name: pattern-clustergroup
+    urls:
+    - https://github.com/mbaldessari/vp-helm-charts/releases/download/pattern-clustergroup-0.0.1/pattern-clustergroup-0.0.1.tgz
+    version: 0.0.1
   vp-hello:
   - apiVersion: v2
     appVersion: 1.16.1
@@ -21,4 +44,4 @@ entries:
     urls:
     - https://github.com/mbaldessari/vp-helm-charts/releases/download/vp-hello-0.1.0/vp-hello-0.1.0.tgz
     version: 0.1.0
-generated: "2022-05-11T09:53:16.497892698Z"
+generated: "2023-04-23T08:43:44.334690408Z"
