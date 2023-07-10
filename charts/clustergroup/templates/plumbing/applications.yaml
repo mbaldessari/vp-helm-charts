@@ -141,7 +141,7 @@ spec:
     name: {{ $.Values.clusterGroup.targetCluster }}
     namespace: {{ default $namespace .namespace }}
   project: {{ .project }}
-  {{- if .global.multiSourceSupport }}
+  {{- if $.Values.global.multiSourceSupport }}
   sources:
   - repoURL: {{ $.Values.global.multiSourceRepoUrl }}
     targetRevision: {{ $.Values.global.multiSourceTargetRevision }}
