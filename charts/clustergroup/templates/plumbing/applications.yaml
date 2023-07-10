@@ -141,6 +141,104 @@ spec:
     name: {{ $.Values.clusterGroup.targetCluster }}
     namespace: {{ default $namespace .namespace }}
   project: {{ .project }}
+  {{- if .global.multiSourceSupport }}
+  sources:
+  - repoURL: {{ $.Values.global.multiSourceRepoUrl }}
+    targetRevision: {{ $.Values.global.multiSourceTargetRevision }}
+    {{- if .chart }}
+    chart: {{ .chart }}
+    {{- else }}
+    path: {{ .path }}
+    {{- end }}
+    {{- if .plugin }}
+    plugin: {{ .plugin | toPrettyJson }}
+    {{- else if not .kustomize }}
+    helm:
+      ignoreMissingValueFiles: true
+      valueFiles:
+      - "$valuesref/values-global.yaml"
+      - "$valuesref/values-{{ $.Values.clusterGroup.name }}.yaml"
+      {{- if $.Values.global.clusterPlatform }}
+      - "$valuesref/values-{{ $.Values.global.clusterPlatform }}.yaml"
+        {{- if $.Values.global.clusterVersion }}
+      - "$valuesref/values-{{ $.Values.global.clusterPlatform }}-{{ $.Values.global.clusterVersion }}.yaml"
+        {{- end }}
+      - "$valuesref/values-{{ $.Values.global.clusterPlatform }}-{{ $.Values.clusterGroup.name }}.yaml"
+      {{- end }}
+      {{- if $.Values.global.clusterVersion }}
+      - "$valuesref/values-{{ $.Values.global.clusterVersion }}-{{ $.Values.clusterGroup.name }}.yaml"
+      {{- end }}
+      {{- range $valueFile := .extraValueFiles }}
+      - {{ $valueFile | quote }}
+      {{- end }}
+      # Watch the progress of https://issues.redhat.com/browse/GITOPS-891 and update accordingly
+      parameters:
+        - name: global.repoURL
+          value: $ARGOCD_APP_SOURCE_REPO_URL
+        - name: global.targetRevision
+          value: $ARGOCD_APP_SOURCE_TARGET_REVISION
+        - name: global.namespace
+          value: $ARGOCD_APP_NAMESPACE
+        - name: global.pattern
+          value: {{ $.Values.global.pattern }}
+        - name: global.clusterDomain
+          value: {{ $.Values.global.clusterDomain }}
+        - name: global.clusterVersion
+          value: "{{ $.Values.global.clusterVersion }}"
+        - name: global.clusterPlatform
+          value: "{{ $.Values.global.clusterPlatform }}"
+        - name: global.hubClusterDomain
+          value: {{ $.Values.global.hubClusterDomain }}
+        - name: global.localClusterDomain
+          value: {{ coalesce $.Values.global.localClusterDomain $.Values.global.hubClusterDomain }}
+        {{- range .extraHubClusterDomainFields }}
+        - name: {{ . }}
+          value: {{ $.Values.global.hubClusterDomain }}
+        {{- end }}
+        {{- range .extraLocalClusterDomainFields }}
+        - name: {{ . }}
+          value: {{ $.Values.global.localClusterDomain }}
+        {{- end }}
+        {{- range .extraRepoURLFields }}
+        - name: {{ . }}
+          value: $ARGOCD_APP_SOURCE_REPO_URL
+        {{- end }}
+        {{- range .extraTargetRevisionFields }}
+        - name: {{ . }}
+          value: $ARGOCD_APP_SOURCE_TARGET_REVISION
+        {{- end }}
+        {{- range .extraNamespaceFields }}
+        - name: {{ . }}
+          value: $ARGOCD_APP_NAMESPACE
+        {{- end }}
+        {{- range .extraPatternNameFields }}
+        - name: {{ . }}
+          value: {{ $.Values.global.pattern }}
+        {{- end }}
+        {{- range $k, $v := $.Values.extraParametersNested }}
+        - name: {{ $k }}
+          value: {{ $v }}
+        {{- end }}
+        {{- range .overrides }}
+        - name: {{ .name }}
+          value: {{ .value | quote }}
+        {{- if .forceString }}
+          forceString: true
+        {{- end }}
+        {{- end }}
+      {{- if .fileParameters }}
+      fileParameters:
+      {{- range .fileParameters }}
+        - name: {{ .name }}
+          path: {{ .path }}
+      {{- end }}
+      {{- end }}
+    {{- end }}
+  - repoURL: {{ coalesce .repoURL $.Values.global.repoURL }}
+    targetRevision: {{ coalesce .targetRevision $.Values.global.targetRevision }}
+    ref: valuesref
+
+  {{- else }} {{/* if not global.multiSourceSupport */}}
   source:
     repoURL: {{ coalesce .repoURL $.Values.global.repoURL }}
     targetRevision: {{ coalesce .targetRevision $.Values.global.targetRevision }}
@@ -233,6 +331,7 @@ spec:
       {{- end }}
       {{- end }}
     {{- end }}
+  {{- end }} {{/* global.multiSourceSupport end */}}
   {{- if .ignoreDifferences }}
   ignoreDifferences: {{ .ignoreDifferences | toPrettyJson }}
   {{- end }}
